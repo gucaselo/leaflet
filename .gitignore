@@ -10,6 +10,8 @@ __pycache__/
 .Python
 /static/js/config.js
 config.js
+version_1/static/js/config.js
+version_2/static/js/config.js
 build/
 develop-eggs/
 dist/
