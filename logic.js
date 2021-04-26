@@ -6,11 +6,6 @@ var myMap = L.map("map", {
 });
 
 function getColor(d) {
-  // return d > 30  ? '#191D0A' :
-  //        d > 25  ? '#3A4317' :
-  //        d > 15  ? '#5A6A24' :
-  //        d > 5  ? '#7C9130' :
-  //                 '#9DB83B';
     return d > 30  ? '#581845' :
            d > 25  ? '#900C3F' :
            d > 15  ? '#C70039' :
