@@ -9,6 +9,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 /static/js/config.js
+config.js
 build/
 develop-eggs/
 dist/
