@@ -14,6 +14,8 @@ function getColor(d) {
 }
 
 var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query.geojson?starttime=2021-04-19%2000:00:00&endtime=2021-04-26%2023:59:59&maxlatitude=50&minlatitude=24.6&maxlongitude=-65&minlongitude=-125&minmagnitude=2.5&orderby=time"
+// var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query.geojson?starttime=2021-03-27%2000:00:00&endtime=2021-04-26%2023:59:59&maxlatitude=50&minlatitude=24.6&maxlongitude=-65&minlongitude=-125&minmagnitude=2.5&orderby=time"
+// var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query.geojson?starttime=2021-04-19%2000:00:00&endtime=2021-04-26%2023:59:59&maxlatitude=53.226&minlatitude=12.383&maxlongitude=-65&minlongitude=-125&minmagnitude=1&orderby=time"
 
 d3.json(queryUrl).then(function(data){
 
@@ -22,6 +24,7 @@ d3.json(queryUrl).then(function(data){
         var longitude = +data.features[i].geometry.coordinates[0];
         var depth = +data.features[i].geometry.coordinates[2];
         var magnitude = +data.features[i].properties.mag;
+        var location = data.features[i].properties.place;
         var coordinates = [latitude, longitude];
 
         var legend = L.control({position: 'bottomright'});
@@ -42,7 +45,7 @@ d3.json(queryUrl).then(function(data){
             color: colors,
             fillColor: colors,
             radius: magnitude * 15000,
-        }).bindPopup("Earthquake").addTo(myMap);
+        }).bindPopup("<h3>Earthquake</h3><br><h5>Magnitude: " + magnitude + "</h5><br><h5>Location: " + location + "</h5>").addTo(myMap);
 
        // Create legend
         legend.onAdd = function (map) {
