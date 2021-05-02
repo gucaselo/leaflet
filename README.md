@@ -18,3 +18,5 @@ Map Views:
 Optional Markers:
 * Earthqueakes (Last 30 days) in the US Region and Mexico.
 * Tectonic Plates
+
+![Map](img/output_map.PNG?raw=true "Map Earthquakes")
