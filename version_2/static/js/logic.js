@@ -14,28 +14,33 @@ var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query.geojson?startti
 // Tectonic Plates
 var link = "static/data/tectonicplates_GeoJSON/PB2002_boundaries.json"
 
-// Our style object
-var mapStyle = {
-    color: "white",
-    fillColor: "pink",
-    fillOpacity: 0.5,
-    weight: 1.5
-    };
+// // Our style object
+// var mapStyle = {
+//     color: "white",
+//     fillColor: "pink",
+//     fillOpacity: 0.5,
+//     weight: 1.5
+//     };
 
-var tectonicPlates = []
+// var tectonicMarkers = []
 
 // // Grabbing our GeoJSON data..
 // d3.json(link).then(function(data) {
 
-//     tectonicPlates.push(L.geoJson(data, {
-//         // Passing in our style object
-//         style: mapStyle
-//       })
-//     );
+//     tectonicMarkers.push(L.geoJson(data));
+
+//     var tectonicPlates = L.layerGroup(tectonicMarkers)
+
+//     // tectonicPlates.push(L.geoJson(data, {
+//     //     // Passing in our style object
+//     //     style: mapStyle
+//     //   })
+//     // );
 
 // });
 
 d3.json(queryUrl).then(function(data){
+    d3.json(link).then(function(data2) {
 
     var streetmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
     attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
@@ -59,6 +64,7 @@ d3.json(queryUrl).then(function(data){
     };
 
     var earthquakeMarker = [];
+    var tectonicMarkers = []
 
     for (i=0; i<data.features.length; i++) {
         var latitude = +data.features[i].geometry.coordinates[1]
@@ -80,8 +86,18 @@ d3.json(queryUrl).then(function(data){
         }).bindPopup("<h3>Earthquake</h3><br><h5>Magnitude: " + magnitude + "</h5><br><h5>Location: " + location + "</h5>")
         );
 
+        // Grabbing our Tectonic Plates GeoJSON data..
+        // d3.json(link).then(function(data) {
+        console.log(data2)
+        // tectonicMarkers.push(L.geoJson(data2));
+        var tectonicMarkers = L.geoJson(data2)
+        // });
+
+        
+
         // Create layer groups:
         var earthquake = L.layerGroup(earthquakeMarker);
+        // var tectonicPlates = L.layerGroup(tectonicMarkers);
 
        // Create legend
         legend.onAdd = function (map) {
@@ -109,15 +125,15 @@ d3.json(queryUrl).then(function(data){
 
     var overlayMaps = {
         Earthquakes: earthquake,
-        // "Tectonic Plates" : tectonicPlates
+        "Tectonic Plates" : tectonicMarkers
     };
 
-    // Grabbing our GeoJSON data..
-    d3.json(link).then(function(data) {
-    // Creating a GeoJSON layer with the retrieved data
-    L.geoJson(data).addTo(myMap);
-    console.log(data)
-  });
+//     // Grabbing our GeoJSON data..
+//     d3.json(link).then(function(data) {
+//     // Creating a GeoJSON layer with the retrieved data
+//     L.geoJson(data).addTo(myMap);
+//     console.log(data)
+//   });
 
     // Add legend to map
     legend.addTo(myMap);
@@ -125,4 +141,6 @@ d3.json(queryUrl).then(function(data){
     L.control.layers(baseMaps, overlayMaps, {
   }).addTo(myMap);
 
-  });
+    });
+
+});
