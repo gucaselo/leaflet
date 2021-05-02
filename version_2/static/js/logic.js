@@ -7,9 +7,9 @@ function getColor(d) {
                     '#FFC305';
 }
 
-var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query.geojson?starttime=2021-04-19%2000:00:00&endtime=2021-04-26%2023:59:59&maxlatitude=50&minlatitude=24.6&maxlongitude=-65&minlongitude=-125&minmagnitude=2.5&orderby=time"
+// var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query.geojson?starttime=2021-04-19%2000:00:00&endtime=2021-04-26%2023:59:59&maxlatitude=50&minlatitude=24.6&maxlongitude=-65&minlongitude=-125&minmagnitude=2.5&orderby=time"
 // var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query.geojson?starttime=2021-03-27%2000:00:00&endtime=2021-04-26%2023:59:59&maxlatitude=50&minlatitude=24.6&maxlongitude=-65&minlongitude=-125&minmagnitude=2.5&orderby=time"
-// var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query.geojson?starttime=2021-04-19%2000:00:00&endtime=2021-04-26%2023:59:59&maxlatitude=53.226&minlatitude=12.383&maxlongitude=-65&minlongitude=-125&minmagnitude=1&orderby=time"
+var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query.geojson?starttime=2021-04-19%2000:00:00&endtime=2021-04-26%2023:59:59&maxlatitude=53.226&minlatitude=12.383&maxlongitude=-65&minlongitude=-125&minmagnitude=1&orderby=time"
 
 // Tectonic Plates
 var link = "static/data/tectonicplates_GeoJSON/PB2002_boundaries.json"
@@ -120,7 +120,7 @@ d3.json(queryUrl).then(function(data){
         center: [37.0902, -95.7129],
         // center: [36.7783, -119.4179],
         zoom: 5,
-        layers: [streetmap, earthquake]
+        layers: [streetmap, earthquake, tectonicMarkers]
         });
 
     var overlayMaps = {
