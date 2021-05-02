@@ -11,6 +11,30 @@ var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query.geojson?startti
 // var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query.geojson?starttime=2021-03-27%2000:00:00&endtime=2021-04-26%2023:59:59&maxlatitude=50&minlatitude=24.6&maxlongitude=-65&minlongitude=-125&minmagnitude=2.5&orderby=time"
 // var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query.geojson?starttime=2021-04-19%2000:00:00&endtime=2021-04-26%2023:59:59&maxlatitude=53.226&minlatitude=12.383&maxlongitude=-65&minlongitude=-125&minmagnitude=1&orderby=time"
 
+// Tectonic Plates
+var link = "static/data/tectonicplates_GeoJSON/PB2002_boundaries.json"
+
+// Our style object
+var mapStyle = {
+    color: "white",
+    fillColor: "pink",
+    fillOpacity: 0.5,
+    weight: 1.5
+    };
+
+var tectonicPlates = []
+
+// // Grabbing our GeoJSON data..
+// d3.json(link).then(function(data) {
+
+//     tectonicPlates.push(L.geoJson(data, {
+//         // Passing in our style object
+//         style: mapStyle
+//       })
+//     );
+
+// });
+
 d3.json(queryUrl).then(function(data){
 
     var streetmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
@@ -84,8 +108,16 @@ d3.json(queryUrl).then(function(data){
         });
 
     var overlayMaps = {
-        Earthquakes: earthquake
+        Earthquakes: earthquake,
+        // "Tectonic Plates" : tectonicPlates
     };
+
+    // Grabbing our GeoJSON data..
+    d3.json(link).then(function(data) {
+    // Creating a GeoJSON layer with the retrieved data
+    L.geoJson(data).addTo(myMap);
+    console.log(data)
+  });
 
     // Add legend to map
     legend.addTo(myMap);
