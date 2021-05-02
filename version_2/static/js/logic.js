@@ -1,9 +1,9 @@
 // Create initial map object
-var myMap = L.map("map", {
-  center: [37.0902, -95.7129],
-  // center: [36.7783, -119.4179],
-  zoom: 5
-});
+// var myMap = L.map("map", {
+//   center: [37.0902, -95.7129],
+//   // center: [36.7783, -119.4179],
+//   zoom: 5
+// });
 
 function getColor(d) {
     return d > 30  ? '#581845' :
@@ -19,6 +19,35 @@ var queryUrl = "https://earthquake.usgs.gov/fdsnws/event/1/query.geojson?startti
 
 d3.json(queryUrl).then(function(data){
 
+    var streetmap = L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+    attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
+    tileSize: 512,
+    maxZoom: 18,
+    zoomOffset: -1,
+    id: "mapbox/streets-v11",
+    accessToken: API_KEY
+    });  
+
+    var darkmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
+    attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
+    maxZoom: 18,
+    id: "dark-v10",
+    accessToken: API_KEY
+    });
+
+    var baseMaps = {
+    "Street Map": streetmap,
+    "Dark Map": darkmap
+    };
+
+    // Create initial map object
+    var myMap = L.map("map", {
+    center: [37.0902, -95.7129],
+    // center: [36.7783, -119.4179],
+    zoom: 5,
+    layers: [streetmap]
+    });
+
     for (i=0; i<data.features.length; i++) {
         var latitude = +data.features[i].geometry.coordinates[1]
         var longitude = +data.features[i].geometry.coordinates[0];
@@ -31,21 +60,17 @@ d3.json(queryUrl).then(function(data){
 
         colors = getColor(depth)
 
-        L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
-        attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
-        tileSize: 512,
-        maxZoom: 18,
-        zoomOffset: -1,
-        id: "mapbox/streets-v11",
-        accessToken: API_KEY
-        }).addTo(myMap);  
-
-        L.circle(coordinates, {
+        var earthquake = L.circle(coordinates, {
             fillOpacity: 1,
             color: colors,
             fillColor: colors,
             radius: magnitude * 15000,
         }).bindPopup("<h3>Earthquake</h3><br><h5>Magnitude: " + magnitude + "</h5><br><h5>Location: " + location + "</h5>").addTo(myMap);
+
+          // Create overlay object to hold our overlay layer
+        // var overlayMaps = {
+        // Earthquakes: earthquakes
+        // };
 
        // Create legend
         legend.onAdd = function (map) {
@@ -61,7 +86,16 @@ d3.json(queryUrl).then(function(data){
           }
           return div;
       };
-  }
-  // Add legend to map
-  legend.addTo(myMap);
+    }
+
+    var overlayMaps = {
+        Earthquakes: earthquake
+    };
+    // Add legend to map
+    legend.addTo(myMap);
+
+    L.control.layers(baseMaps, overlayMaps, {
+    // collapsed: false?
+  }).addTo(myMap);
+
   });
