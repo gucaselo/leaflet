@@ -19,4 +19,6 @@ Optional Markers:
 * Earthqueakes (Last 30 days) in the US Region and Mexico.
 * Tectonic Plates
 
+You can access the interactive map by clicking [here](https://gucaselo.github.io/leaflet/)
+
 ![Map](img/output_map.PNG?raw=true "Map Earthquakes")
