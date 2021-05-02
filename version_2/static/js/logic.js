@@ -1,9 +1,3 @@
-// Create initial map object
-// var myMap = L.map("map", {
-//   center: [37.0902, -95.7129],
-//   // center: [36.7783, -119.4179],
-//   zoom: 5
-// });
 
 function getColor(d) {
     return d > 30  ? '#581845' :
@@ -40,13 +34,7 @@ d3.json(queryUrl).then(function(data){
     "Dark Map": darkmap
     };
 
-    // Create initial map object
-    var myMap = L.map("map", {
-    center: [37.0902, -95.7129],
-    // center: [36.7783, -119.4179],
-    zoom: 5,
-    layers: [streetmap]
-    });
+    var earthquakeMarker = [];
 
     for (i=0; i<data.features.length; i++) {
         var latitude = +data.features[i].geometry.coordinates[1]
@@ -60,17 +48,16 @@ d3.json(queryUrl).then(function(data){
 
         colors = getColor(depth)
 
-        var earthquake = L.circle(coordinates, {
+        earthquakeMarker.push(L.circle(coordinates, {
             fillOpacity: 1,
             color: colors,
             fillColor: colors,
             radius: magnitude * 15000,
-        }).bindPopup("<h3>Earthquake</h3><br><h5>Magnitude: " + magnitude + "</h5><br><h5>Location: " + location + "</h5>").addTo(myMap);
+        }).bindPopup("<h3>Earthquake</h3><br><h5>Magnitude: " + magnitude + "</h5><br><h5>Location: " + location + "</h5>")
+        );
 
-          // Create overlay object to hold our overlay layer
-        // var overlayMaps = {
-        // Earthquakes: earthquakes
-        // };
+        // Create layer groups:
+        var earthquake = L.layerGroup(earthquakeMarker);
 
        // Create legend
         legend.onAdd = function (map) {
@@ -88,14 +75,22 @@ d3.json(queryUrl).then(function(data){
       };
     }
 
+    // Create initial map object
+    var myMap = L.map("map", {
+        center: [37.0902, -95.7129],
+        // center: [36.7783, -119.4179],
+        zoom: 5,
+        layers: [streetmap, earthquake]
+        });
+
     var overlayMaps = {
         Earthquakes: earthquake
     };
+
     // Add legend to map
     legend.addTo(myMap);
 
     L.control.layers(baseMaps, overlayMaps, {
-    // collapsed: false?
   }).addTo(myMap);
 
   });
